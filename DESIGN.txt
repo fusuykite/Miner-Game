@@ -1,0 +1,9 @@
+There were several methods in the functions class which I did not feel were necessary to move elsewhere. 
+For the method load() I did not feel it was needed for load() to belong to any one class.
+For the method processline(), there were multiple methods for which the method could have belonged to. 
+The method ParseMiner() could have been placed in multiple classes.
+The method ParseOre() can be placed in multiple classes to be called on by the functions.
+The method ParseSmith() can be placed in multiple classes and as such is better to be placed in functions.
+The method ParseBackground(), could have been placed in multiple classes.
+The method clamp() could be placed in multiple different classes.
+By doing this project we understand the importance of methods belonging to specific classes. 
