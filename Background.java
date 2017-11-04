@@ -1,11 +1,13 @@
 import java.util.List;
+import java.util.Optional;
+
 import processing.core.PImage;
 
 final class Background
 {
-   private String id;
-   private List<PImage> images;
-   private int imageIndex;
+   protected String id;
+   protected List<PImage> images;
+   protected int imageIndex;
 
    public Background(String id, List<PImage> images)
    {
@@ -13,16 +15,18 @@ final class Background
       this.images = images;
    }
 
-   public PImage getCurrentImage(){
-      return (this.images.get(this.imageIndex));
+   public static PImage getCurrentImage(Object entity)
+   {
+      if (entity instanceof Background)
+      {
+         return ((Background)entity).images
+                 .get(((Background)entity).imageIndex);
+      }
+      else
+      {
+         throw new UnsupportedOperationException(
+                 String.format("getCurrentImage not supported for %s",
+                         entity));
+      }
    }
-
-   public String getId(){
-      return this.id;
-   }
-
-   public List<PImage> getImages(){
-      return this.images;
-   }
-
 }

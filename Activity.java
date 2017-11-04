@@ -1,60 +1,52 @@
-import processing.core.PImage;
+public class Activity extends ActionAb{
+    protected WorldModel world;
+    protected ImageStore imageStore;
 
-import java.awt.*;
-import java.util.*;
-
-
-public class Activity implements ActionInterface{
-    private Executable entity;
-    private WorldModel world;
-    private ImageStore imagestore;
-    private int repeatCount;
-
-    public Activity(Executable entity, WorldModel world, ImageStore imageStore, int repeatCount){
+    public Activity(Entity entity, WorldModel world, ImageStore imageStore){
         this.entity = entity;
         this.world = world;
-        this.repeatCount = repeatCount;
-        this.imagestore = imageStore;
-
+        this.imageStore = imageStore;
     }
 
-    public static Activity createActivityAction(Executable entity, WorldModel world,
-                                                            ImageStore imageStore)
+
+    @Override
+    public void executeAction(EventScheduler scheduler)
     {
-        return new Activity(entity, world, imageStore, 0);
+        executeActivityAction(scheduler);
     }
 
-
-    public void execute(EventScheduler scheduler)
+    public void executeActivityAction(EventScheduler scheduler)
     {
-        if (entity instanceof Miner_Full)
-            ((Miner_Full) entity).execute(world,
-                        imagestore, scheduler);
 
+            if (entity instanceof MINER_FULL) {
+                ((MINER_FULL)entity).executeMinerFullActivity(entity, world,
+                        imageStore, scheduler);
+            }
+            if (entity instanceof MINER_NOT_FULL) {
+                ((MINER_NOT_FULL)entity).executeMinerNotFullActivity(entity, world,
+                        imageStore, scheduler);
+            }
 
-        if (entity instanceof Miner_Not_Full)
-            ((Miner_Not_Full) entity).execute(world,
-                        imagestore, scheduler);
+            if (entity instanceof ORE) {
+                ((ORE)entity).executeOreActivity(scheduler, entity, world, imageStore);
+            }
 
-        if (entity instanceof Ore)
-            ((Ore) entity).execute(world, imagestore,
-                        scheduler);
+            if (entity instanceof ORE_BLOB) {
+                ((ORE_BLOB)entity).executeOreBlobActivity(scheduler, entity, world,
+                        imageStore);
+            }
 
-        if (entity instanceof Ore_Blob)
-            ((Ore_Blob) entity).execute(world,
-                        imagestore, scheduler);
+            if (entity instanceof Quake) {
+                ((Quake)entity).executeQuakeActivity(scheduler, entity, world);
+            }
 
-
-         if (entity instanceof Quake)
-             ((Quake) entity).execute(world, imagestore,
-                        scheduler);
-
-         if (entity instanceof Vein)
-             ((Vein) entity).execute(world, imagestore,
-                        scheduler);
-
+            if (entity instanceof VEIN) {
+                ((VEIN)entity).executeVeinActivity(entity, world, imageStore, scheduler);
+            }
     }
 
-
+    public static Action createActivityAction(Entity entity, WorldModel world,
+                                              ImageStore imageStore) {
+        return new Activity(entity, world, imageStore);
+    }
 }
-

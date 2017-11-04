@@ -1,10 +1,10 @@
 final class Event
 {
-   public ActionInterface action;
-   public long time;
-   public EntityInterface entity;
+   protected Action action;
+   protected long time;
+   protected Entity entity;
 
-   public Event(ActionInterface action, long time, EntityInterface entity)
+   public Event(Action action, long time, Entity entity)
    {
       this.action = action;
       this.time = time;

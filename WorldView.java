@@ -5,15 +5,16 @@ import java.util.Optional;
 
 final class WorldView
 {
-   public PApplet screen;
-   public WorldModel world;
-   public int tileWidth;
-   public int tileHeight;
-   public Viewport viewport;
 
+   protected WorldModel world;
+
+   protected Viewport viewport;
+   protected int tileWidth;
+   protected int tileHeight;
+   protected PApplet screen;
 
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
-                    int tileWidth, int tileHeight)
+      int tileWidth, int tileHeight)
    {
       this.screen = screen;
       this.world = world;
@@ -22,30 +23,24 @@ final class WorldView
       this.viewport = new Viewport(numRows, numCols);
    }
 
-
-
    public void shiftView(int colDelta, int rowDelta)
    {
       int newCol = Functions.clamp(viewport.col + colDelta, 0,
-              world.getNumCols() - viewport.numCols);
+              world.numCols - viewport.numCols);
       int newRow = Functions.clamp(viewport.row + rowDelta, 0,
-              world.getNumRows() - viewport.numRows);
+              world.numRows - viewport.numRows);
 
       viewport.shift(newCol, newRow);
    }
 
-
-
-
-   private void drawBackground()
+   public void drawBackground()
    {
       for (int row = 0; row < viewport.numRows; row++)
       {
          for (int col = 0; col < viewport.numCols; col++)
          {
             Point worldPoint = viewport.viewportToWorld(col, row);
-            Optional<PImage> image = world.getBackgroundImage(
-                    worldPoint);
+            Optional<PImage> image = world.getBackgroundImage(worldPoint);
             if (image.isPresent())
             {
                screen.image(image.get(), col * tileWidth,
@@ -55,12 +50,11 @@ final class WorldView
       }
    }
 
-
-   private void drawEntities()
+   public void drawEntities()
    {
-      for (EntityInterface entity : world.getEntities())
+      for (Entity entity : world.entities)
       {
-         Point pos = entity.position();
+         Point pos = entity.getPosition();
 
          if (viewport.contains(pos))
          {

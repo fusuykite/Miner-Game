@@ -1,34 +1,34 @@
-import java.awt.*;
+public class Animation extends ActionAb{
+    protected int repeatCount;
 
-public class Animation implements ActionInterface{
-
-    private AnimPeriod entity;
-    private WorldModel worldModel;
-    private ImageStore imageStore;
-    private int repeatCount;
-
-    public Animation(AnimPeriod entity, WorldModel worldModel, ImageStore imageStore, int repeatCount){
+    public Animation(Entity entity, int repeatCount){
         this.entity = entity;
-        this.worldModel = worldModel;
-        this.imageStore = imageStore;
-        this. repeatCount = repeatCount;
+        this.repeatCount = repeatCount;
     }
 
-    public static Animation createAnimationAction(AnimPeriod entity, int repeatCount)
+    @Override
+    public void executeAction(EventScheduler scheduler)
     {
-        return new Animation( entity, null, null, repeatCount);
+        executeAnimationAction(scheduler);
+
     }
 
-    public void execute(EventScheduler scheduler)
+
+    public static Action createAnimationAction(Entity entity, int repeatCount)
+    {
+        return new Animation(entity, repeatCount);
+    }
+
+    protected void executeAnimationAction(EventScheduler scheduler)
     {
         entity.nextImage();
 
         if (repeatCount != 1)
         {
             scheduler.scheduleEvent(entity,
-                    createAnimationAction(entity,
+                    Animation.createAnimationAction(entity,
                             Math.max(repeatCount - 1, 0)),
-                    entity.getAnimationPeriod());
+                    ((Animated)entity).getAnimationPeriod());
         }
     }
 

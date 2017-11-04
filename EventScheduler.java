@@ -2,9 +2,16 @@ import java.util.*;
 
 final class EventScheduler
 {
-   public PriorityQueue<Event> eventQueue;
-   public Map<EntityInterface, List<Event>> pendingEvents;
-   public double timeScale;
+   public static final Random rand = new Random();
+
+   protected PriorityQueue<Event> eventQueue;
+   protected Map<Entity, List<Event>> pendingEvents;
+   protected double timeScale;
+
+
+
+
+
 
    public EventScheduler(double timeScale)
    {
@@ -13,22 +20,24 @@ final class EventScheduler
       this.timeScale = timeScale;
    }
 
-   public void scheduleEvent(EntityInterface entity, ActionInterface action, long afterPeriod)
+   public void scheduleEvent(Entity entity, Action action, long afterPeriod)
    {
       long time = System.currentTimeMillis() +
-         (long)(afterPeriod * timeScale);
+              (long)(afterPeriod * timeScale);
       Event event = new Event(action, time, entity);
 
       eventQueue.add(event);
 
       // update list of pending events for the given entity
       List<Event> pending = pendingEvents.getOrDefault(entity,
-         new LinkedList<>());
+              new LinkedList<>());
       pending.add(event);
       pendingEvents.put(entity, pending);
    }
 
-   public void unscheduleAllEvents(EntityInterface entity)
+
+
+   public void unscheduleAllEvents(Entity entity)
    {
       List<Event> pending = pendingEvents.remove(entity);
 
@@ -37,6 +46,28 @@ final class EventScheduler
          for (Event event : pending)
          {
             eventQueue.remove(event);
+         }
+      }
+   }
+
+   public void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore)
+   {
+      for (Entity entity : world.entities)
+      {
+         if (entity instanceof ORE) {
+            ((ORE)entity).scheduleActions(world, scheduler, imageStore);
+         }
+         else if (entity instanceof MINER_NOT_FULL) {
+            ((MINER_NOT_FULL)entity).scheduleActions(world, scheduler, imageStore);
+         }
+         else if (entity instanceof MINER_FULL) {
+            ((MINER_FULL)entity).scheduleActions(world, scheduler, imageStore);
+         }
+         else if (entity instanceof ORE_BLOB) {
+            ((ORE_BLOB)entity).scheduleActions(world, scheduler, imageStore);
+         }
+         else if (entity instanceof VEIN) {
+            ((VEIN)entity).scheduleActions(world, scheduler, imageStore);
          }
       }
    }
@@ -51,16 +82,22 @@ final class EventScheduler
       }
    }
 
-   public void updateOnTime(long time)
+   public static void updateOnTime(EventScheduler scheduler, long time)
    {
-      while (!eventQueue.isEmpty() &&
-         eventQueue.peek().time < time)
+      while (!scheduler.eventQueue.isEmpty() &&
+              scheduler.eventQueue.peek().time < time)
       {
-         Event next = eventQueue.poll();
+         Event next = scheduler.eventQueue.poll();
 
-         removePendingEvent(next);
+         scheduler.removePendingEvent(next);
 
-         next.action.execute(this);
+         next.action.executeAction(scheduler);
       }
    }
+
+
+
+
+
+
 }

@@ -1,9 +1,17 @@
-public interface Move extends AnimPeriod{
 
+import processing.core.PImage;
 
-    public Point nextPos(Point point, WorldModel worldModel);
+public interface Move extends Animated, Work {
 
-    public void move(WorldModel worldModel, Point pos);
+    Point getPosition();
 
+    int getAnimationPeriod();
 
+    void setPosition(Point p);
+
+    void nextImage();
+
+    void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore);
+
+    PImage getCurrentImage();
 }
