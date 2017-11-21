@@ -1,6 +1,10 @@
 import processing.core.PImage;
 
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 final class WorldModel
 {
@@ -59,35 +63,19 @@ final class WorldModel
    }
 
 
-   public Optional<Entity> findNearest(Point pos, String type)
+   public Optional<Entity> findNearest(Point pos, AllFalseEntityVisitor visitor)
    {
       List<Entity> ofType = new LinkedList<>();
 
-      if (type.equals("VEIN")) {
-         for (Entity entity : entities) {
-            if (entity instanceof VEIN) {
-               ofType.add(entity);
-            }
-         }
-      }
-      else if (type.equals("ORE")) {
-         for (Entity entity : entities) {
-            if (entity instanceof ORE) {
-               ofType.add(entity);
-            }
-         }
-      }
-      else if (type.equals("BlackSmith")) {
-         for (Entity entity : entities) {
-            if (entity instanceof BlackSmith) {
-               ofType.add(entity);
-            }
-         }
-      }
 
-      return nearestEntity(ofType, pos);
+         for (Entity entity : entities) {
+            if(entity.accept(visitor)){
+               ofType.add(entity);
+            }
+         }
+          return nearestEntity(ofType, pos);
+
    }
-
 
 
    public Entity getOccupancyCell(Point pos)
@@ -234,24 +222,6 @@ final class WorldModel
    {removeEntityAt(target.getPosition());
    }
 
-   public Point nextPositionMiner(Entity miner, Point destPos)
-   {
-      int horiz = Integer.signum(destPos.x - miner.getPosition().x);
-      Point newPos = new Point(miner.getPosition().x + horiz,
-              miner.getPosition().y);
 
-      if (horiz == 0 || isOccupied(newPos))
-      {
-         int vert = Integer.signum(destPos.y - miner.getPosition().y);
-         newPos = new Point(miner.getPosition().x,
-                 miner.getPosition().y + vert);
 
-         if (vert == 0 || isOccupied(newPos))
-         {
-            newPos = miner.getPosition();
-         }
-      }
-
-      return newPos;
-   }
 }

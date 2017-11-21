@@ -18,10 +18,16 @@ public class Quake extends  Animation_AB implements Animated, Work{
                 QUAKE_ACTION_PERIOD, QUAKE_ANIMATION_PERIOD);
     }
 
-    public void executeQuakeActivity(EventScheduler scheduler, Entity entity, WorldModel world)
+    public void execute( WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        scheduler.unscheduleAllEvents(entity);
-        world.removeEntity(entity);
+        scheduler.unscheduleAllEvents(this);
+        world.removeEntity(this);
     }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 
 }

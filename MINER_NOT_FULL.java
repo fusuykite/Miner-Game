@@ -33,7 +33,7 @@ public class MINER_NOT_FULL extends Miners implements Move{
         return false;
     }
 
-    public boolean moveToNotFull(WorldModel world, Entity target, EventScheduler scheduler)
+    public  boolean moveToNotFull(WorldModel world, Entity target, EventScheduler scheduler)
     {
         if (getPosition().adjacent(target.getPosition()))
         {
@@ -45,7 +45,8 @@ public class MINER_NOT_FULL extends Miners implements Move{
         }
         else
         {
-            Point nextPos = world.nextPositionMiner(this, target.getPosition());
+            Point nextPos = nextPositionMiner(world, target.getPosition());
+
 
             if (!getPosition().equals(nextPos))
             {
@@ -85,10 +86,11 @@ public class MINER_NOT_FULL extends Miners implements Move{
                 getAnimationPeriod());
     }
 
-    public void executeMinerNotFullActivity(Entity entity, WorldModel world, ImageStore imageStore, EventScheduler scheduler)
+    public void execute( WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> notFullTarget = world.findNearest(entity.getPosition(),
-                "ORE");
+        ORE_Visit ore_visit = new ORE_Visit();
+        Optional<Entity> notFullTarget = world.findNearest(this.getPosition(),
+                ore_visit);
 
         if (!notFullTarget.isPresent() ||
                 !moveToNotFull(world, notFullTarget.get(), scheduler) ||
@@ -99,4 +101,10 @@ public class MINER_NOT_FULL extends Miners implements Move{
                     actionPeriod);
         }
     }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 }

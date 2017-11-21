@@ -9,5 +9,10 @@ public class BlackSmith extends EntityAb {
     }
 
 
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 
 }

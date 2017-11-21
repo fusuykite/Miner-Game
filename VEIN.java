@@ -16,10 +16,10 @@ public class VEIN extends Activity_AB {
 
 
 
-    public void executeVeinActivity(Entity entity, WorldModel world,
+    public void execute( WorldModel world,
                                     ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Point> openPt = world.findOpenAround(entity.getPosition());
+        Optional<Point> openPt = world.findOpenAround(this.getPosition());
 
         if (openPt.isPresent())
         {
@@ -31,9 +31,15 @@ public class VEIN extends Activity_AB {
             ((ORE)ore).scheduleActions(world, scheduler, imageStore);
         }
 
-        scheduler.scheduleEvent(entity,
-                Activity.createActivityAction(entity, world, imageStore),
+        scheduler.scheduleEvent(this,
+                Activity.createActivityAction(this, world, imageStore),
                 actionPeriod);
     }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 
 }

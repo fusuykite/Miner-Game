@@ -9,6 +9,10 @@ public class Obstacle extends EntityAb {
         super(id, position, images, 0);
     }
 
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
 
 
 }

@@ -30,6 +30,7 @@ public abstract class Activity_AB extends EntityAb {
         }
 
 
+        public abstract <R> R accept(EntityVisitor<R> visitor);
 
         public void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
             scheduler.scheduleEvent(this,

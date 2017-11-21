@@ -15,11 +15,11 @@ public class ORE extends Activity_AB {
     }
 
 
-    public void executeOreActivity(EventScheduler scheduler, Entity entity, WorldModel world, ImageStore imageStore) {
-        Point pos = entity.getPosition();  // store current position before removing
+    public void execute(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
+        Point pos = position;  // store current position before removing
 
-        world.removeEntity(entity);
-        scheduler.unscheduleAllEvents(entity);
+        world.removeEntity(this);
+        scheduler.unscheduleAllEvents(this);
 
         Entity blob = ORE_BLOB.createOreBlob(id + BLOB_ID_SUFFIX,
                 pos, actionPeriod / BLOB_PERIOD_SCALE,
@@ -30,6 +30,12 @@ public class ORE extends Activity_AB {
         world.addEntity(blob);
         ((ORE_BLOB)blob).scheduleActions(world, scheduler, imageStore);
     }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 
 
 

@@ -64,13 +64,15 @@ public class MINER_FULL extends Miners implements Move{
 
 
 
-    public void executeMinerFullActivity(Entity entity, WorldModel world,
+    public void execute( WorldModel world,
                                          ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> fullTarget = world.findNearest(entity.getPosition(),
-                "BlackSmith");
+        Move_Visit move_visit = new Move_Visit();
+        BlackSmith_Visit blackSmith_visit = new BlackSmith_Visit();
+        Optional<Entity> fullTarget = world.findNearest(this.getPosition(),
+                blackSmith_visit);
 
-        if (fullTarget.isPresent() && entity instanceof Move &&
+        if (fullTarget.isPresent() && this.accept(move_visit)&&
                 moveToFull(world, fullTarget.get(), scheduler))
         {
             transformFull(world, scheduler, imageStore);
@@ -92,4 +94,10 @@ public class MINER_FULL extends Miners implements Move{
         scheduler.scheduleEvent(this, Animation.createAnimationAction(this, 0),
                 getAnimationPeriod());
     }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
+    }
+
 }

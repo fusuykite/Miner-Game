@@ -7,4 +7,6 @@ public interface Entity {
     PImage getCurrentImage();
     Point getPosition();
     void nextImage();
+
+    public abstract <R> R accept(EntityVisitor<R> visitor);
 }

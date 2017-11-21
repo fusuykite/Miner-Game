@@ -2,8 +2,12 @@ import processing.core.PImage;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-public class ORE_BLOB extends Animation_AB {
+public class ORE_BLOB extends Animation_AB implements Animated {
 
 
 
@@ -16,28 +20,52 @@ public class ORE_BLOB extends Animation_AB {
     public Point nextPosition(WorldModel world,
                                      Point destPos)
     {
-        int horiz = Integer.signum(destPos.x - position.x);
-        Point newPos = new Point(position.x + horiz,
-                position.y);
+        PathingStrategy strategy = new AStarPathingStrategy();
 
-        Optional<Entity> occupant = world.getOccupant(newPos);
+        List<Point> points = strategy.computePath(position, destPos, canPassThrough(world), withinReach(), CARDINAL_NEIGHBORS);
 
-        if (horiz == 0 ||
-                (occupant.isPresent() && !(occupant.get() instanceof ORE)))
-        {
-            int vert = Integer.signum(destPos.y - position.y);
-            newPos = new Point(position.x, position.y + vert);
-            occupant = world.getOccupant(newPos);
 
-            if (vert == 0 ||
-                    (occupant.isPresent() && !(occupant.get() instanceof ORE)))
-            {
-                newPos = position;
-            }
+        if (points.size() == 0) {
+            return position;
         }
-
-        return newPos;
+        return points.get(0);
     }
+
+
+
+    protected static Predicate<Point> canPassThrough(WorldModel world){
+        return p -> (!world.isOccupied(p) && world.withinBounds(p));
+    }
+
+
+
+    protected static BiPredicate<Point, Point> withinReach(){
+        return (Point p1, Point p2) -> p1.adjacent(p2);
+
+    }
+
+    public static final Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
+            point ->
+                    Stream.<Point>builder()
+                            .add(new Point(point.x, point.y - 1))
+                            .add(new Point(point.x, point.y + 1))
+                            .add(new Point(point.x - 1, point.y))
+                            .add(new Point(point.x + 1, point.y))
+                            .build();
+
+    public static final Function<Point, Stream<Point>> DIAGONAL_NEIGHBORS =
+            point ->
+                    Stream.<Point>builder()
+                            .add(new Point(point.x-1, point.y - 1))
+                            .add(new Point(point.x+1, point.y + 1))
+                            .add(new Point(point.x - 1, point.y+1))
+                            .add(new Point(point.x + 1, point.y-1))
+                            .build();
+
+
+
+
+
 
 
 
@@ -74,16 +102,18 @@ public class ORE_BLOB extends Animation_AB {
         return new ORE_BLOB(id, position, images, 0, actionPeriod, animationPeriod);
     }
 
-    public void executeOreBlobActivity(EventScheduler scheduler, Entity entity, WorldModel world, ImageStore imageStore)
+    public void execute( WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> blobTarget = world.findNearest(entity.getPosition(), "VEIN");
+        VEIN_Visit vein_visit = new VEIN_Visit();
+
+        Optional<Entity> blobTarget = world.findNearest(this.getPosition(), vein_visit);
         long nextPeriod = actionPeriod;
 
         if (blobTarget.isPresent())
         {
             Point tgtPos = blobTarget.get().getPosition();
 
-            if (moveToOreBlob(scheduler, entity, world, blobTarget.get()))
+            if (moveToOreBlob(scheduler, this, world, blobTarget.get()))
             {
                 Entity quake = Quake.createQuake(tgtPos,
                         imageStore.getImageList(QUAKE_KEY));
@@ -94,8 +124,8 @@ public class ORE_BLOB extends Animation_AB {
             }
         }
 
-        scheduler.scheduleEvent(entity,
-                Activity.createActivityAction(entity, world, imageStore),
+        scheduler.scheduleEvent(this,
+                Activity.createActivityAction(this, world, imageStore),
                 nextPeriod);
     }
 
@@ -107,6 +137,11 @@ public class ORE_BLOB extends Animation_AB {
                 actionPeriod);
         scheduler.scheduleEvent(this, Animation.createAnimationAction(this, 0),
                 getAnimationPeriod());
+    }
+
+    public <R> R accept(EntityVisitor<R> visitor)
+    {
+        return visitor.visit(this);
     }
 
 }
