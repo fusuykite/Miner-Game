@@ -21,6 +21,10 @@ public abstract class Activity_AB extends EntityAb {
         protected static final String ORE_KEY = "ore";
 
         protected int actionPeriod;
+
+        public void setActionPeriod(int act){
+                this.actionPeriod = act;
+        }
         protected int imageIndex = 0;
         protected static final Random rand = new Random();
 

@@ -11,6 +11,7 @@ public class MINER_FULL extends Miners implements Move{
 
     }
 
+    public void setImages(List<PImage> images){this.images = images;}
 
 
 

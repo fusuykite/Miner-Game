@@ -13,8 +13,12 @@ final class WorldView
    protected int tileHeight;
    protected PApplet screen;
 
+   public Viewport getViewport() {
+      return viewport;
+   }
+
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
-      int tileWidth, int tileHeight)
+                    int tileWidth, int tileHeight)
    {
       this.screen = screen;
       this.world = world;

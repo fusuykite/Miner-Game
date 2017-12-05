@@ -14,6 +14,8 @@ public class AllFalseEntityVisitor implements EntityVisitor<Boolean>{
         return false;
     };
 
+    public Boolean visit(Santa santa){return false;}
+
     public Boolean visit(VEIN vein){
         return false;
     };
@@ -33,5 +35,7 @@ public class AllFalseEntityVisitor implements EntityVisitor<Boolean>{
     public Boolean visit(MINER_NOT_FULL miner_not_full){
         return false;
     };
+
+    public Boolean visit(Ornaments ornaments){return false;};
 
 }

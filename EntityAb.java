@@ -20,6 +20,8 @@ public abstract class EntityAb implements Entity{
         return images.get(imageIndex);
     }
 
+    public void setImages(List<PImage> images){this.images = images;}
+
     public Point getPosition(){
         return position;
     }

@@ -23,7 +23,7 @@ public abstract class Miners extends Animation_AB {
     }
 
     public Point nextPosition(WorldModel world, Point destPos) {
-        PathingStrategy strategy = new AStarPathingStrategy();
+        PathingStrategy strategy = new SingleStepPathingStrategy();
 
         List<Point> points = strategy.computePath(position, destPos, canPassThrough(world), withinReach(), CARDINAL_NEIGHBORS);
 
@@ -73,7 +73,7 @@ public abstract class Miners extends Animation_AB {
 
     public Point nextPositionMiner(WorldModel world, Point destPos)
     {
-       PathingStrategy strategy = new AStarPathingStrategy();
+       PathingStrategy strategy = new SingleStepPathingStrategy();
 
        List<Point> points = strategy.computePath(position, destPos, canPassThrough(world), withinReach(), CARDINAL_NEIGHBORS);
 

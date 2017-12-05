@@ -7,18 +7,18 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class ORE_BLOB extends Animation_AB implements Animated {
+public class Santa extends Animation_AB implements Animated {
 
 
 
-    public ORE_BLOB(String id, Point position, List<PImage> images, int imageIndex, int actionPeriod, int animationPeriod) {
+    public Santa(String id, Point position, List<PImage> images, int imageIndex, int actionPeriod, int animationPeriod) {
         super(id, position, images, imageIndex, actionPeriod, animationPeriod);
     }
 
 
 
     public Point nextPosition(WorldModel world,
-                                     Point destPos)
+                              Point destPos)
     {
         PathingStrategy strategy = new SingleStepPathingStrategy();
 
@@ -65,12 +65,6 @@ public class ORE_BLOB extends Animation_AB implements Animated {
 
 
 
-
-
-
-
-
-
     public boolean moveToOreBlob(EventScheduler scheduler, Entity blob, WorldModel world, Entity target)
     {
         if (blob.getPosition().adjacent(target.getPosition()))
@@ -96,17 +90,17 @@ public class ORE_BLOB extends Animation_AB implements Animated {
             return false;
         }
     }
-    public static Entity createOreBlob(String id, Point position,
+    public static Entity createSanta(String id, Point position,
                                        int actionPeriod, int animationPeriod, List<PImage> images)
     {
-        return new ORE_BLOB(id, position, images, 0, actionPeriod, animationPeriod);
+        return new Santa(id, position, images, 0, actionPeriod, animationPeriod);
     }
 
     public void execute( WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        VEIN_Visit vein_visit = new VEIN_Visit();
-
-        Optional<Entity> blobTarget = world.findNearest(this.getPosition(), vein_visit);
+        MINER_NOT_FULL_Visit vein_visit = new MINER_NOT_FULL_Visit();
+        ORE_BLOB_Visit ore_blob_visit = new ORE_BLOB_Visit();
+        Optional<Entity> blobTarget = world.findNearest(this.getPosition(), ore_blob_visit);
         long nextPeriod = actionPeriod;
 
         if (blobTarget.isPresent())

@@ -59,12 +59,15 @@ final class EventScheduler
          if (entity.accept(ore_visit)) {
             ((ORE)entity).scheduleActions(world, scheduler, imageStore);
          }
+
          else if (entity.accept(miner_not_full_visit)) {
             ((MINER_NOT_FULL)entity).scheduleActions(world, scheduler, imageStore);
          }
+
          else if (entity.accept(miner_full_visit)) {
             ((MINER_FULL)entity).scheduleActions(world, scheduler, imageStore);
          }
+
          else if (entity.accept(ore_blob_visit)) {
             ((ORE_BLOB)entity).scheduleActions(world, scheduler, imageStore);
          }

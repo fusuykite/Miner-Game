@@ -126,7 +126,6 @@ final class WorldModel
 
 
 
-
    public Optional<Point> findOpenAround(Point pos)
    {
       for (int dy = -ORE_REACH; dy <= ORE_REACH; dy++)

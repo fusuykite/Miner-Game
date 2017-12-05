@@ -16,5 +16,9 @@ public interface EntityVisitor<R>
 
         R visit(MINER_NOT_FULL miner_not_full);
 
+        R visit(Santa santa);
+
+        R visit(Ornaments ornaments);
+
     }
 

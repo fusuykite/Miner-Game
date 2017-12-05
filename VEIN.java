@@ -17,23 +17,24 @@ public class VEIN extends Activity_AB {
 
 
     public void execute( WorldModel world,
-                                    ImageStore imageStore, EventScheduler scheduler)
-    {
+                                    ImageStore imageStore, EventScheduler scheduler) {
         Optional<Point> openPt = world.findOpenAround(this.getPosition());
 
-        if (openPt.isPresent())
-        {
+
+        if (openPt.isPresent()) {
             Entity ore = new ORE(ORE_ID_PREFIX + id,
                     openPt.get(), ORE_CORRUPT_MIN +
-                            rand.nextInt(ORE_CORRUPT_MAX - ORE_CORRUPT_MIN),
+                    rand.nextInt(ORE_CORRUPT_MAX - ORE_CORRUPT_MIN),
                     imageStore.getImageList(ORE_KEY));
             world.addEntity(ore);
-            ((ORE)ore).scheduleActions(world, scheduler, imageStore);
+            ((ORE) ore).scheduleActions(world, scheduler, imageStore);
+
+
+            scheduler.scheduleEvent(this,
+                    Activity.createActivityAction(this, world, imageStore),
+                    actionPeriod);
         }
 
-        scheduler.scheduleEvent(this,
-                Activity.createActivityAction(this, world, imageStore),
-                actionPeriod);
     }
 
     public <R> R accept(EntityVisitor<R> visitor)

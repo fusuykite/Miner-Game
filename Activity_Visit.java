@@ -4,6 +4,8 @@ public class Activity_Visit  extends AllFalseEntityVisitor{
         return true;
     };
 
+    public Boolean visit(Obstacle obstacle){return true;}
+
     public Boolean visit(VEIN vein){
         return true;
     };

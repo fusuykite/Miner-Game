@@ -2,10 +2,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import processing.core.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class VirtualWorld
-   extends PApplet
-{
+   extends PApplet {
    private static final int TIMER_ACTION_PERIOD = 100;
 
    private static final int VIEW_WIDTH = 640;
@@ -43,22 +44,20 @@ public final class VirtualWorld
    private long next_time;
 
 
-   public void settings()
-   {
+   public void settings() {
       size(VIEW_WIDTH, VIEW_HEIGHT);
    }
 
    /*
       Processing entry point for "sketch" setup.
    */
-   public void setup()
-   {
+   public void setup() {
       this.imageStore = new ImageStore(
-         createImageColored(TILE_WIDTH, TILE_HEIGHT, DEFAULT_IMAGE_COLOR));
+              createImageColored(TILE_WIDTH, TILE_HEIGHT, DEFAULT_IMAGE_COLOR));
       this.world = new WorldModel(WORLD_ROWS, WORLD_COLS,
-         createDefaultBackground(imageStore));
+              createDefaultBackground(imageStore));
       this.view = new WorldView(VIEW_ROWS, VIEW_COLS, this, world,
-         TILE_WIDTH, TILE_HEIGHT);
+              TILE_WIDTH, TILE_HEIGHT);
       this.scheduler = new EventScheduler(timeScale);
 
       loadImages(IMAGE_LIST_FILE_NAME, imageStore, this);
@@ -69,11 +68,9 @@ public final class VirtualWorld
       next_time = System.currentTimeMillis() + TIMER_ACTION_PERIOD;
    }
 
-   public void draw()
-   {
+   public void draw() {
       long time = System.currentTimeMillis();
-      if (time >= next_time)
-      {
+      if (time >= next_time) {
          EventScheduler.updateOnTime(this.scheduler, time);
          next_time = time + TIMER_ACTION_PERIOD;
       }
@@ -81,31 +78,93 @@ public final class VirtualWorld
       view.drawViewport();
    }
 
-   public void keyPressed()
-   {
-      if (key == CODED)
-      {
-         int dx = 0;
-         int dy = 0;
+   public void keyPressed() {
 
-         switch (keyCode)
-         {
-            case UP:
-               dy = -1;
-               break;
-            case DOWN:
-               dy = 1;
-               break;
-            case LEFT:
-               dx = -1;
-               break;
-            case RIGHT:
-               dx = 1;
-               break;
-         }
-         view.shiftView(dx, dy);
+
+      if(key ==CODED)
+
+   {
+      int dx = 0;
+      int dy = 0;
+
+      switch (keyCode) {
+         case UP:
+            dy = -1;
+            break;
+         case DOWN:
+            dy = 1;
+            break;
+         case LEFT:
+            dx = -1;
+            break;
+         case RIGHT:
+            dx = 1;
+            break;
       }
+      view.shiftView(dx, dy);
+
    }
+
+}
+
+   public void mousePressed()
+   {
+
+      Point pressed = new Point(mouseX/TILE_WIDTH, mouseY/TILE_HEIGHT);
+      pressed = view.getViewport().viewportToWorld(pressed.x, pressed.y);
+      List<Point> sets = new ArrayList<>();
+      sets.add(pressed);
+      sets.add(new Point(pressed.x, pressed.y+1));
+      sets.add(new Point(pressed.x-1, pressed.y-1));
+      sets.add(new Point(pressed.x+1, pressed.y+1));
+      sets.add(new Point(pressed.x, pressed.y-1));
+      sets.add(new Point(pressed.x-1, pressed.y));
+      sets.add(new Point(pressed.x-1, pressed.y+1));
+      sets.add(new Point(pressed.x+1, pressed.y));
+      sets.add(new Point(pressed.x+1, pressed.y-1));
+
+      Background tree = new Background("tree", imageStore.getImageList("tree"));
+      Entity santa = Santa.createSanta("santa", pressed, 0, 0, imageStore.getImageList("santa"));
+      world.addEntity(santa);
+      ((Santa)santa).scheduleActions(world, scheduler, imageStore);
+
+      for(Point p: sets)
+      {
+            world.setBackground(p, tree);
+      }
+
+      for(Point p: sets)
+      {
+
+         if(world.getOccupant(p).isPresent())
+         {
+            if (world.getOccupant(p).get() instanceof VEIN){
+               String hi = "1";
+            }
+            if (world.getOccupant(p).get() instanceof MINER_FULL || world.getOccupant(p).get() instanceof MINER_NOT_FULL){
+               Miners miner = (Miners) world.getOccupant(p).get();
+               miner.setImages(imageStore.getImageList("reindeer"));
+               miner.setActionPeriod(10);
+
+            }
+
+         }
+
+      }
+
+      redraw();
+
+   }
+
+   private Point mouseToPoint(int x, int y)
+   {
+      return new Point(mouseX/TILE_WIDTH, mouseY/TILE_HEIGHT);
+   }
+
+
+
+
+
 
    public static Background createDefaultBackground(ImageStore imageStore)
    {

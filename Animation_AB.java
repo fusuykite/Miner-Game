@@ -7,6 +7,7 @@ public abstract class Animation_AB extends Activity_AB {
     protected static final String QUAKE_KEY = "quake";
 
     protected int animationPeriod;
+
     protected static final int QUAKE_ACTION_PERIOD = 1100;
     protected static final int QUAKE_ANIMATION_PERIOD = 100;
     protected static final int QUAKE_ANIMATION_REPEAT_COUNT = 10;

@@ -14,6 +14,7 @@ class AStarPathingStrategy implements PathingStrategy {
                                    Predicate<Point> canPassThrough,
                                    BiPredicate<Point, Point> withinReach,
                                    Function<Point, Stream<Point>> potentialNeighbors) {
+
         //Initialize Lists and variables
         Map<Point, Node> closed = new HashMap<>();
         Map<Point, Node> open = new HashMap<>();
@@ -30,6 +31,8 @@ class AStarPathingStrategy implements PathingStrategy {
                     .filter(canPassThrough)
                     .filter(pt -> !pt.equals(end))
                     .collect(Collectors.toList());
+
+
             //Iterates through the neighbors list for a set of possible points
             for (Point adj: adjacent) {
                 if (open.containsKey(adj)) {
@@ -70,6 +73,7 @@ class AStarPathingStrategy implements PathingStrategy {
         List<Point> final_path = new ArrayList<>();
         final_path = PathCreator(now, final_path);
         return final_path;
+
     }
 
     public int h_dist(Point now, Point end) {

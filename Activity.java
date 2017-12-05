@@ -20,6 +20,8 @@ public class Activity extends ActionAb {
         ORE_BLOB_Visit ore_blob_visit = new ORE_BLOB_Visit();
         Quake_Visit quake_visit = new Quake_Visit();
         VEIN_Visit vein_visit = new VEIN_Visit();
+        Santa_Visit santa_Visit = new Santa_Visit();
+        Ornaments_Visit ornaments_visit = new Ornaments_Visit();
 
         if (entity.accept(miner_full_visit)) {
             ((MINER_FULL)entity).execute(world,
@@ -45,6 +47,13 @@ public class Activity extends ActionAb {
 
         if (entity.accept(vein_visit)) {
             ((VEIN)entity).execute(world, imageStore, scheduler);
+        }
+
+
+
+        if (entity.accept(santa_Visit)){
+            ((Santa)entity).execute( world,
+                    imageStore, scheduler);
         }
     }
 
