@@ -25,6 +25,12 @@ quake images/quake3.bmp 255 255 255 0
 quake images/quake4.bmp 255 255 255 0
 quake images/quake5.bmp 255 255 255 0
 quake images/quake6.bmp 255 255 255 0
+wave images/wyvern1.bmp 255 255 255 0
+santa images/santa.bmp 255 255 255 0
+wave4 images/blacksmith.bmp
+reindeer images/Project2.bmp
+tree images/download.bmp 255 255 255 0
 rocks images/rock.bmp
 vein images/vein.bmp
+ornam images/Ornam.bmp
 background_default images/none.bmp

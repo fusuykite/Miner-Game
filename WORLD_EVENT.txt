@@ -1,0 +1,13 @@
+
+Happy Holidays Julie! Welcome to the Christmas Edition of our CPE 203 Project.
+
+1) To trigger an event simply click anywhere within the game. 
+
+2) The event chosen is a winter forest that spawns around the mouse click. 
+
+3) Any miners within proximity of the forest will turn into super reindeer which are able 
+to collect Ores far faster than the normal miner. (Super Reindeer are how Santa manages to 
+fly around the world so fast!)
+
+4) The new entity created from the forest event is a Santa entity. The Santa Entity works 
+to find and destroy any ore blobs in sight. 
