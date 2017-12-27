@@ -102,3 +102,4 @@ public class MINER_FULL extends Miners implements Move{
     }
 
 }
+
