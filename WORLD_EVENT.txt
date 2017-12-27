@@ -1,5 +1,5 @@
 
-Happy Holidays Julie! Welcome to the Christmas Edition of our CPE 203 Project.
+Happy Holidays! Welcome to the Christmas Edition of our Miner Game.
 
 1) To trigger an event simply click anywhere within the game. 
 
